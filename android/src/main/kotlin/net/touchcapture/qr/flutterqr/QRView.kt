@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.View
 import com.google.zxing.ResultPoint
+import com.google.zxing.BarcodeFormat
 import android.hardware.Camera.CameraInfo
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
@@ -124,7 +125,9 @@ class QRView(private val registrar: PluginRegistry.Registrar, id: Int) :
         barcode.decodeContinuous(
                 object : BarcodeCallback {
                     override fun barcodeResult(result: BarcodeResult) {
-                        channel.invokeMethod("onRecognizeQR", result.text)
+                        if(result.getBarcodeFormat() == BarcodeFormat.QR_CODE) {
+                            channel.invokeMethod("onRecognizeQR", result.text)
+                        }                        
                     }
 
                     override fun possibleResultPoints(resultPoints: List<ResultPoint>) {}
